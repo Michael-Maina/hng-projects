@@ -4,7 +4,7 @@ Simple API module
 """
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request
-
+from os import getenv
 
 app = Flask(__name__)
 
@@ -19,7 +19,10 @@ def index():
 
     slack_name = request.args.get('slack_name')
     track = request.args.get('track')
-    repo_url = 'https://github.com/Michael-Maina/hng-projects',
+
+    print(request.query_string)
+
+    repo_url = 'https://github.com/Michael-Maina/hng-projects'
     file_url = 'https://github.com/Michael-Maina/hng-projects/blob/master/stage_1/api.py'
 
     utc_time = datetime.now(timezone.utc)
@@ -39,4 +42,10 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(port=3000, host='0.0.0.0')
+    API_HOST = getenv('API_HOST')
+    API_PORT = getenv('API_PORT')
+
+    host = API_HOST if API_HOST else '0.0.0.0'
+    port = API_PORT if API_PORT else 5000
+
+    app.run(port=port, host=host)
