@@ -16,7 +16,10 @@ app = Flask(__name__)
 def create_user():
     """ Creates a user """
 
-    data = request.get_json(force=True)
+    data = request.get_json(force=True, silent=True)
+    print()
+    print(data)
+    print()
     if not data:
         value = request.form.get('name')
         data = {}
@@ -53,7 +56,7 @@ def update_user(user_id):
     if not user:
         return jsonify(f"Error: User {user_id} not found"), 404
 
-    data = request.get_json(force=True)
+    data = request.get_json(force=True, silent=True)
     if not data:
         value = request.form.get('name')
         data = {}
