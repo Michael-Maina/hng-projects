@@ -8,7 +8,7 @@ from models.users import User
 from os import getenv
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker, scoped_session
-from typing import Dict, Union
+from typing import Union
 
 load_dotenv()
 

@@ -16,27 +16,28 @@ app = Flask(__name__)
 def create_user():
     """ Creates a user """
 
-    data_param = request.args.get('name')
-
-    if not data_param:
-        data = request.get_json()
-    else:
+    data = request.get_json(force=True)
+    if not data:
+        value = request.form.get('name')
         data = {}
-        data['name'] = data_param
+        data['name'] = value
 
+    if not isinstance(data['name'], str):
+        return jsonify("Invalid data: Expecting a string"), 400
+        
     new_user = User(**data)
+    if not new_user:
+        return jsonify("An error occurred while trying to create"), 400
     new_user.save()
 
     return jsonify(new_user.to_dict()), 201
 
 
-@app.route('/api', methods=['GET'], strict_slashes=False)
-def get_user():
+@app.route('/api/<user_id>', methods=['GET'], strict_slashes=False)
+def get_user(user_id):
     """ Returns a user's details """
 
-    name = request.args.get('name')
-    id = request.args.get('user_id')
-    user = storage.get_record(name, id)
+    user = storage.get_record(None, user_id)
 
     if not user:
         return jsonify("User not found"), 404
@@ -44,7 +45,7 @@ def get_user():
     return jsonify(user.to_dict()), 200
 
 
-@app.route('/api/<user_id>', methods=['PATCH'], strict_slashes=False)
+@app.route('/api/<user_id>', methods=['PUT'], strict_slashes=False)
 def update_user(user_id):
     """ Updates a user's details """
 
@@ -52,7 +53,15 @@ def update_user(user_id):
     if not user:
         return jsonify(f"Error: User {user_id} not found"), 404
 
-    data = request.get_json()
+    data = request.get_json(force=True)
+    if not data:
+        value = request.form.get('name')
+        data = {}
+        data['name'] = value
+
+    if not isinstance(data['name'], str):
+        return jsonify("Invalid data: Expecting a string"), 400
+        
     for attr, value in data.items():
         setattr(user, attr, value)
 
