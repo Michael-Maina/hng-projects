@@ -1,7 +1,0 @@
-# Environment variables
-API_HOST=127.0.0.1
-API_PORT=3000
-DB_USERNAME=hng_intern
-DB_PWD=whisk_knit_claus23
-DB_HOST=localhost
-DB_DATABASE=hng_projects

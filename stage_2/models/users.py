@@ -9,4 +9,4 @@ from sqlalchemy import Column, String
 class User(BaseModel, Base):
     __tablename__ = 'users'
 
-    name = Column(String(128))
+    name = Column(String(128), nullable=False)

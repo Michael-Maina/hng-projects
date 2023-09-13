@@ -17,9 +17,6 @@ def create_user():
     """ Creates a user """
 
     data = request.get_json(force=True, silent=True)
-    print()
-    print(data)
-    print()
     if not data:
         value = request.form.get('name')
         data = {}
@@ -29,8 +26,6 @@ def create_user():
         return jsonify("Invalid data: Expecting a string"), 400
         
     new_user = User(**data)
-    if not new_user:
-        return jsonify("An error occurred while trying to create"), 400
     new_user.save()
 
     return jsonify(new_user.to_dict()), 201
@@ -43,7 +38,7 @@ def get_user(user_id):
     user = storage.get_record(None, user_id)
 
     if not user:
-        return jsonify("User not found"), 404
+        return jsonify(f"Error: User {user_id} not found"), 404
 
     return jsonify(user.to_dict()), 200
 
@@ -83,7 +78,7 @@ def delete_user(user_id):
 
     storage.delete(user)
 
-    return jsonify(f"User {user_id} deleted from the database"), 200
+    return ('', 204)
 
 
 if __name__ == '__main__':
